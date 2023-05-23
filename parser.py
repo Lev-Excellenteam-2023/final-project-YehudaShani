@@ -3,10 +3,10 @@ import collections.abc
 from pptx import Presentation
 
 
-
-
-
 class Parser:
+    """
+    A class that parses PowerPoint presentation file and provides methods to get the text from the slides.
+    """
 
     def __init__(self, path):
         """
