@@ -1,6 +1,7 @@
 import parser
+import gpt_prompter
+import asyncio
 
 parser = parser.Parser("asyncio-intro.pptx")
-for index, slide in enumerate(parser):
-    print("Slide", index)
-    print("Text:", parser.get_text_from_slide(slide))
+
+asyncio.run(gpt_prompter.get_gpt_answer(parser))
