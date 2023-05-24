@@ -6,14 +6,14 @@ import file_writer
 
 from parser import Parser, get_text_from_slide
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 def generate_summary(parser: Parser):
     messages_to_send = []
     messages_to_send.append({"role": "assistant", "content": "you are a chatbot that explains bullet points in a "
-                                                             "powerpoint presentation to a student"})
-    for slide in parser:
+                                                             "powerpoint presentation to a student, only be informative, not friendly"})
+    for number, slide in enumerate(parser):
         text = get_text_from_slide(slide)
         if len(text) == 0:
             continue
@@ -28,7 +28,7 @@ def generate_summary(parser: Parser):
         chat_response = completion.choices[0].message.content
         messages_to_send.append({"role": "assistant", "content": chat_response})
 
-        yield chat_response
+        yield (number, chat_response)
 
 
 async def get_gpt_answer(parser, file_name):
@@ -36,7 +36,9 @@ async def get_gpt_answer(parser, file_name):
     writer = file_writer.FileWriter(file_name)
     while True:
         try:
-            writer.write_to_file(next(generator))
+            slide_number, text = next(generator)
+            print("Writing slide number", slide_number)
+            writer.write_to_file(slide_number, text)
             await asyncio.sleep(20)
         except StopIteration:
             writer.close_file()

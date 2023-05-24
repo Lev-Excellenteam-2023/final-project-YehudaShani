@@ -11,7 +11,7 @@ class FileWriter:
         self.file.write("[\n")
         self.file.close()
 
-    def write_to_file(self, text, slide_number):
+    def write_to_file(self, slide_number, text):
         self.file = open(self.file_path, "a")
         message = {"slide_number": slide_number, "content": text}
         self.file.write(json.dumps(message))
