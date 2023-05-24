@@ -2,6 +2,7 @@
 
 import openai
 import asyncio
+import file_writer
 
 from parser import Parser, get_text_from_slide
 
@@ -13,8 +14,8 @@ def generate_summary(parser: Parser):
     messages_to_send.append({"role": "assistant", "content": "you are a chatbot that explains bullet points in a "
                                                              "powerpoint presentation to a student"})
     for slide in parser:
-        get_text_from_slide = get_text_from_slide(slide)
-        if len(get_text_from_slide) == 0:
+        text = get_text_from_slide(slide)
+        if len(text) == 0:
             continue
         content = " ".join(get_text_from_slide(slide))
         messages_to_send.append({"role": "user", "content": content})
@@ -30,11 +31,16 @@ def generate_summary(parser: Parser):
         yield chat_response
 
 
-async def get_gpt_answer(parser):
+async def get_gpt_answer(parser, file_name):
     generator = generate_summary(parser)
+    writer = file_writer.FileWriter(file_name)
     while True:
         try:
-            yield next(generator)
+            writer.write_to_file(next(generator))
             await asyncio.sleep(20)
         except StopIteration:
+            writer.close_file()
             break
+        except Exception as e:
+            print(e)
+            continue
