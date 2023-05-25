@@ -1,4 +1,4 @@
-# secret key is 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
+# secret key is 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
 
 import openai
 import asyncio
@@ -6,19 +6,23 @@ import file_writer
 
 from parser import Parser, get_text_from_slide
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 def generate_summary(parser: Parser):
-    messages_to_send = []
-    messages_to_send.append({"role": "assistant", "content": "you are a chatbot that explains bullet points in a "
-                                                             "powerpoint presentation to a student, only be informative, not friendly"})
+    """
+    Generate a summary of the presentation.
+    :param parser: The parser object that holds the slides.
+    :return: a generator that yields the slide number and the summary of the slide.
+    """
+
+    messages_to_send = [{"role": "assistant", "content": "Hello, I am your assistant, i will explain these topics."}]
     for number, slide in enumerate(parser):
         text = get_text_from_slide(slide)
         if len(text) == 0:
             continue
         content = " ".join(get_text_from_slide(slide))
-        messages_to_send.append({"role": "user", "content": content})
+        messages_to_send.append({"role": "user", "content": "Summarize and explain these topics: " + content})
 
         completion = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -28,10 +32,16 @@ def generate_summary(parser: Parser):
         chat_response = completion.choices[0].message.content
         messages_to_send.append({"role": "assistant", "content": chat_response})
 
-        yield (number, chat_response)
+        yield number, chat_response
 
 
 async def get_gpt_answer(parser, file_name):
+    """
+    Get the GPT answer and write it to a file.
+    :param parser: The parser object.
+    :param file_name: The name of the file to write to.
+    :return: None
+    """
     generator = generate_summary(parser)
     writer = file_writer.FileWriter(file_name)
     while True:
@@ -45,4 +55,4 @@ async def get_gpt_answer(parser, file_name):
             break
         except Exception as e:
             print(e)
-            continue
+            break
