@@ -17,12 +17,10 @@ def main():
     while True:
         pptx_files = [file for file in os.listdir(uploads_path) if file.endswith('.pptx')]
         for file in pptx_files:
-            print
             my_parser = parser.Parser(file)
             asyncio.run(gpt_prompter.get_gpt_answer2(my_parser, file))
-            #delete the file after processing
-            #os.remove(os.path.join(uploads_path, file))
-
+            # delete the file after processing
+            os.remove(os.path.join(uploads_path, file))
         print("going to sleep")
         time.sleep(10)
         print("running again")
