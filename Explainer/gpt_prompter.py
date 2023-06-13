@@ -117,7 +117,7 @@ async def get_gpt_answer2(parser, file_name):
     for (slide_number, prompt), response in zip(prompts, responses):
         print(response)
         print("Writing slide number", slide_number)
-        if len(response["choices"]) == 0:
+        if response == {}:
             writer.write_to_file(slide_number, "No response")
         writer.write_to_file(slide_number, response["choices"][0]["message"]["content"])
     writer.close_file()
