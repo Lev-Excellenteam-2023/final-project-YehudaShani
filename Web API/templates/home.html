@@ -70,15 +70,28 @@
 
     <h2>Check Status</h2>
 
-    <form action="/status" method="post">
-        <div>
-            <label for="upload_id">Upload ID:</label>
-            <input type="text" id="upload_id" name="upload_id">
-        </div>
-        <div>
-            <button type="submit">Check Status</button>
-        </div>
-    </form>
+<form id="status-form" action="/status" method="get">
+    <div>
+        <label for="upload_id">Upload ID:</label>
+        <input type="text" id="upload_id" name="upload_id">
+    </div>
+    <div>
+        <button type="submit">Check Status</button>
+    </div>
+</form>
+
+<script>
+    document.getElementById("status-form").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var uploadId = document.getElementById("upload_id").value; // Get the value entered by the user
+
+        // Generate the URL with the upload ID as a query parameter
+        var url = "/status?upload_id=" + encodeURIComponent(uploadId);
+
+        window.location.href = url; // Redirect the page to the generated URL
+    });
+</script>
 
             {% if status_answer %}
     <hr>
