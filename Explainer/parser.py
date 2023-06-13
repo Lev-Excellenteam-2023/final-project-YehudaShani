@@ -2,6 +2,8 @@ import collections
 import collections.abc
 from pptx import Presentation
 
+path_to_uploads = "content/uploads/"
+
 
 def get_text_from_slide(slide):
     """
@@ -25,7 +27,7 @@ class Parser:
     A class that parses PowerPoint presentation file and provides methods to get the text from the slides.
     """
 
-    def __init__(self, path):
+    def __init__(self, file_name):
         """
             Initialize a new instance of the class with the given path.
 
@@ -33,12 +35,11 @@ class Parser:
                 path (str): The path to the presentation file.
             :return: None
         """
-        self.path = path
-        self.presentation = Presentation(path)
+        
+        self.path = path_to_uploads + file_name
+        self.presentation = Presentation(self.path)
         self.slides = self.presentation.slides
 
     def __iter__(self):
         return self.slides.__iter__()
-
-
 
