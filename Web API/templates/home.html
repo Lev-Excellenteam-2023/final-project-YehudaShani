@@ -79,5 +79,20 @@
             <button type="submit">Check Status</button>
         </div>
     </form>
+
+            {% if status_answer %}
+    <hr>
+
+    <h2>File Status</h2>
+
+    <p>File uploaded successfully.</p>
+    <p>Status: {{ status_answer}}</p>
+    {% endif %}
+
+    <hr>
+    <hr>
+
+    <h2>File Status</h2>
+
 </body>
 </html>
