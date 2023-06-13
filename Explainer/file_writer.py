@@ -2,7 +2,9 @@
 
 import json
 import os
+from pathlib import Path
 
+outputs_root = "content/outputs/"
 
 class FileWriter:
     """
@@ -10,7 +12,8 @@ class FileWriter:
     """
 
     def __init__(self, file_name):
-        self.file_path = os.path.join(os.getcwd(), file_name + ".json")
+        file = Path(file_name.split('.')[0])
+        self.file_path = os.path.join(os.getcwd(), outputs_root, file_name.split('.')[0] + ".json")
         self.file = open(self.file_path, "w")
         self.file.write("[\n")
         self.file.close()
