@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,800;1,900&display=swap');
+        *{
+            font-family: 'Roboto', 'sans-serif';
+            text-decoration: none;
+        }
+        html, body {
+            height: 100%;    /* Why would you want this? */
+            overflow: auto;  /* FIX for wild margins */
+        }
+        body {
+            background-color: #f2f2f2;
+            margin: 0;
+        }
+        main {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            animation: enter-left 1000ms ease-in-out ;
+        }
+        section {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        section label {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #5c5b5b;
+        }
+
+        .user-action {
+
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        button {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+        @keyframes enter-left{
+        0%{
+        opacity: 0;
+        transform: translateX(-50px);
+        }
+        100%{
+
+        }
+}
+    </style>
+</head>
+<body>
+    <main>
+        <section>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+
+                <h2>File Upload</h2>
+                <div class="user-action">
+                    <label for="file">Choose a file:</label>
+                    <input type="file" id="file" name="file">
+                </div>
+                <div class="user-action">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <button type="submit">Upload</button>
+            </form>
+
+        </section>
+
+            {% if file_id %}
+    <hr>
+
+    <h2>Upload Status</h2>
+
+    <p>File uploaded successfully.</p>
+    <p>File ID: {{ file_id }}</p>
+    {% endif %}
+
+    <hr>
+        <section>
+<form id="status-form" action="/status" method="get">
+            <h2>Check Status</h2>
+            <div class="user-action">
+                <input placeholder="Upload Id" type="text" id="upload_id" name="upload_id">
+            </div>
+            <div>
+                <button type="submit">Check Status</button>
+            </div>
+        </form>
+</section>
+            {% if status_answer %}
+    <hr>
+<section>
+    <h2>File Status</h2>
+
+    <p>File uploaded successfully.</p>
+    <p>Status: {{status_answer}}</p>
+    {% endif %}
+      </section>
+    </main>
+            <script>
+    document.getElementById("status-form").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var uploadId = document.getElementById("upload_id").value; // Get the value entered by the user
+
+        // Generate the URL with the upload ID as a query parameter
+        var url = "/status?upload_id=" + encodeURIComponent(uploadId);
+
+        window.location.href = url; // Redirect the page to the generated URL
+    });
+</script>
+</body>
+
+</html>
