@@ -7,6 +7,9 @@ import os
 import uuid
 import json
 
+import addToDatabase
+
+
 app = Flask(__name__, template_folder='templates')
 
 app.config['UPLOAD_FOLDER'] = 'C:\\Users\\yehuda\\Documents\\ExcelenTeam\\Python\\Exercises\\GPT API\\content\\uploads'
@@ -14,7 +17,7 @@ app.config['OUTPUT_FOLDER'] = 'C:\\Users\\yehuda\\Documents\\ExcelenTeam\\Python
 
 
 # Route for the new page
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def new():
     return render_template('new.html')
 
@@ -26,10 +29,14 @@ def upload_file():
     if file:
         file_name_without_extension = os.path.splitext(file.filename)[0]
         file_name_extension = os.path.splitext(file.filename)[1]
+        email = request.form['email']
+        #email = "user@example.com"
+        user = addToDatabase.find_user(email)
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         file_id = generate_id()
         filename_to_save = '-'.join([file_name_without_extension, timestamp, file_id]) + file_name_extension
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_to_save))
+        addToDatabase.add_upload(file_name_without_extension, "uploaded", user, file_id)
         return render_template('new.html', file_id=json.dumps({"uid": file_id}))
 
     else:
@@ -52,6 +59,9 @@ def check_status():
                 if f.read() == '[':
                     json_answer = json.dumps({"status": "processing"})
                 else:
+                    upload = addToDatabase.find_upload(file_id)
+                    if upload is not None:
+                        addToDatabase.update_upload_status(upload, "ready")
                     json_answer = json.dumps({"status": "ready"})
                     return render_template('new.html', status_answer=json_answer)
 
@@ -75,4 +85,4 @@ def generate_id():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
