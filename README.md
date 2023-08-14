@@ -1,5 +1,9 @@
 # The GPT-Explainer Project
 
+## How to run it
+run both the server and the gpt engine files.
+The first receives and presents the info, the latter processes the files
+
 ## Introduction
 
 Learning Software Development is hard. Especially when you can't understand the lecturer's presentations. Wouldn't it be nice to have someone explain them for you?
